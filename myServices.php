@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE);
 session_start();
+// The next Line should be deleted
 $_SESSION['developerID'] = 1;
 ?>
 <!DOCTYPE html>
@@ -125,39 +126,37 @@ if (isset($_SESSION['developerID'])) {
 function addDeveloperBlogs($developerID)
 {
   include('config-DB.php');
-  $sql = "SELECT  `developerId`, `category`, `description`, `price`, `date` FROM `service` WHERE `developerId`=1";
+  $sql = "SELECT  `developerId`, `category`, `description`, `price`, `date` FROM `service` WHERE `developerId`=".$_SESSION['developerID'];
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
     // output data of each row
     while ($row = $result->fetch_assoc()) {
       if ($row["category"] == "UI") {
-        addUI($row["description"], $row["price"]);
+        addUI($row["description"], $row["price"], $row["date"]);
       } elseif ($row["category"] == "mobile") {
-        addMobile($row["description"], $row["price"]);
+        addMobile($row["description"], $row["price"], $row["date"]);
       } elseif ($row["category"] == "web") {
-        addWeb($row["description"], $row["price"]);
+        addWeb($row["description"], $row["price"], $row["date"]);
       }
     }
   } else {
     echo "0 results";
   }
-  // $conn->close();
-
 }
-function addUI($description, $price)
+function addUI($description, $price, $date)
 {
-  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="description">' . $price . '</p></div></div>';
+  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 300px;"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="date" style="padding-top:15px;"> <b> Price : </b>'.  $price .' SR <br> <b> Date : </b>'.  $date .'  </p></div></div>';
   echo $htmlCode;
 }
-function addWeb($description, $price)
+function addWeb($description, $price, $date)
 {
-  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="description">' . $price . '</p></div></div>';
+  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 300px;"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="date" style="padding-top:15px;"> <b> Price : </b>'.  $price .' SR <br> <b> Date : </b>'.  $date .'  </p></div></div>';
   echo $htmlCode;
 }
-function addMobile($description, $price)
+function addMobile($description, $price, $date)
 {
-  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="description">' . $price . '</p></div></div>';
+  $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 300px;"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $description . '</a></h4> <p class="date" style="padding-top:15px;"> <b> Price : </b>'.  $price .' SR <br> <b> Date : </b>'.  $date .'  </p></div></div>';
   echo $htmlCode;
 }
 ?>

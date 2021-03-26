@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE);
 session_start();
+// The next Line should be deleted
 $_SESSION['developerID'] = 1;
 ?>
 <!DOCTYPE html>
@@ -125,39 +126,38 @@ $_SESSION['developerID'] = 1;
               function addDeveloperBlogs($developerID)
               {
                 include('config-DB.php');
-                $sql = "SELECT  `developerId`, `category`, `title`, `shortDescription`, `date` FROM `blog` WHERE `developerId`=1";
+                $sql = "SELECT  `developerId`,`name`, `category`, `title`, `shortDescription`, `date` FROM `blog`,`developer` WHERE `developerId`=".$_SESSION['developerID'].' AND developer.Id='.$_SESSION['developerID'];
+                
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                   // output data of each row
                   while ($row = $result->fetch_assoc()) {
                     if ($row["category"] == "UI") {
-                      addUI($row["title"], $row["shortDescription"]);
+                      addUI($row["title"], $row["shortDescription"],$row["date"], $row["name"] );
                     } elseif ($row["category"] == "mobile") {
-                      addMobile($row["title"], $row["shortDescription"]);
+                      addMobile($row["title"], $row["shortDescription"], $row["date"], $row["name"]);
                     } elseif ($row["category"] == "web") {
-                      addWeb($row["title"], $row["shortDescription"]);
+                      addWeb($row["title"], $row["shortDescription"], $row["date"], $row["name"]);
                     }
                   }
                 } else {
                   echo "0 results";
                 }
-                // $conn->close();
-
               }
-              function addUI($title, $description)
+              function addUI($title, $description, $date, $name)
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.' <br> <b> Date : </b> '. $date.'   </p></div></div>';
                 echo $htmlCode;
               }
-              function addWeb($title, $description)
+              function addWeb($title, $description, $date, $name)
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.'<br> <b> Date : </b> '. $date.'   </p></div></div>';
                 echo $htmlCode;
               }
-              function addMobile($title, $description)
+              function addMobile($title, $description,$date, $name )
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.' <br> <b> Date : </b> '. $date.'   </p></div></div>';
                 echo $htmlCode;
               }
               ?>
