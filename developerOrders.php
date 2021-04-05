@@ -158,7 +158,7 @@ $_SESSION['developerID'] = 1;
               }
               function addUncompletedOrders($category, $description, $name, $email,  $orderDate, $serviceId)
               {
-               
+
                 $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-uncompleted" style="margin-left: 100px;"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 320px; width: 400px;"> ';
                 if ($category == "mobile") {
                   $htmlCode .= '<div class="icon"><i class="bx bx-mobile-alt"></i></div>';
@@ -168,7 +168,7 @@ $_SESSION['developerID'] = 1;
                   $htmlCode .= '<div class="icon"><i class="bx bx-columns"></i></div>';
                 }
                 $htmlCode .= ' <h4 class="title"><a href="">' . $description . '</a></h4> <p class="description"> <b> User Name: </b> ' . $name . ' </p> <p class="description"> <b> User Email: </b> ' . $email . ' </p> <p class="description"> <b> Order Date: </b> ' . $orderDate . ' </p> <div> <button class="btn-complate" id="' . $serviceId . '" onclick="updateOrderState(this)">Completed</button> </div> </div> </div>';
-               
+
                 echo $htmlCode;
               }
               function addCompletedOrders($category, $description, $name, $email,  $orderDate)
@@ -235,7 +235,6 @@ $_SESSION['developerID'] = 1;
   <script>
     async function updateOrderState(event) {
       var orderID = event.id;
-      console.log(orderID);
       const sendOrderID = new FormData();
       sendOrderID.set('orderID', orderID);
 
@@ -264,7 +263,7 @@ $_SESSION['developerID'] = 1;
 
     }
 
-    // error alert 
+    // error alert
     async function errorAlert(msg) {
       return Swal.fire({
         icon: 'error',
@@ -276,7 +275,7 @@ $_SESSION['developerID'] = 1;
       });
     }
 
-    // success alert 
+    // success alert
     async function successAlert(msg) {
       return Swal.fire({
         icon: 'success',

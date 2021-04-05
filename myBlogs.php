@@ -31,34 +31,53 @@ $_SESSION['developerID'] = 1;
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
   <style>
-  .add{
-    cursor: pointer;
-    display: inline-block;
-    padding: 8px 15px 10px 15px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-    transition: all 0.3s ease-in-out;
-    border-radius: 3px;
-  }
-</style>
+    .add {
+      cursor: pointer;
+      display: inline-block;
+      padding: 8px 15px 10px 15px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      transition: all 0.3s ease-in-out;
+      border-radius: 3px;
+    }
+
+    .btn-complate {
+      margin-top: 20px;
+      margin-left: 40px;
+      border-color: #3498db;
+      background: #3498db;
+      padding: 8px 25px;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .icon-box:hover .btn-complate,
+    .btn-complate:hover {
+      border-color: #fff;
+      background: #fff;
+      color: #3498db;
+    }
+  </style>
 </head>
 
 <body>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center" style="background-color:#f8f8f8;">
-    <div class="container d-flex align-items-center justify-content-between" >
+    <div class="container d-flex align-items-center justify-content-between">
 
       <div class="logo">
-        
-         <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+
+        <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
       </div>
 
       <nav id="navbar" class="navbar">
@@ -126,51 +145,47 @@ $_SESSION['developerID'] = 1;
               function addDeveloperBlogs($developerID)
               {
                 include('config-DB.php');
-                $sql = "SELECT  `developerId`,`name`, `category`, `title`, `shortDescription`, `date` FROM `blog`,`developer` WHERE `developerId`=".$_SESSION['developerID'].' AND developer.Id='.$_SESSION['developerID'];
-                
+                $sql = "SELECT  `developerId`, blog.Id, `name`, `category`, `title`, `shortDescription`, `date` FROM `blog`,`developer` WHERE `developerId`=" . $_SESSION['developerID'] . ' AND developer.Id=' . $_SESSION['developerID'];
+
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
                   // output data of each row
                   while ($row = $result->fetch_assoc()) {
                     if ($row["category"] == "UI") {
-                      addUI($row["title"], $row["shortDescription"],$row["date"], $row["name"] );
+                      addUI($row["title"], $row["shortDescription"], $row["date"], $row["name"], $row["Id"]);
                     } elseif ($row["category"] == "mobile") {
-                      addMobile($row["title"], $row["shortDescription"], $row["date"], $row["name"]);
+                      addMobile($row["title"], $row["shortDescription"], $row["date"], $row["name"], $row["Id"]);
                     } elseif ($row["category"] == "web") {
-                      addWeb($row["title"], $row["shortDescription"], $row["date"], $row["name"]);
+                      addWeb($row["title"], $row["shortDescription"], $row["date"], $row["name"], $row["Id"]);
                     }
                   }
                 } else {
                   echo "0 results";
                 }
               }
-              function addUI($title, $description, $date, $name)
+              function addUI($title, $description, $date, $name, $blogID)
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.' <br> <b> Date : </b> '. $date.'   </p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-UI"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 450px;"> <div class="icon"><i class="bx bx-columns"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> ' . $name . ' <br> <b> Date : </b> ' . $date . '   </p>
+                 <div style="position: fixed; bottom: 30px;"> <button class="btn-complate" id="' . $blogID . '" onclick="removeBlog(this)">Delete the Blog</button> </div>
+                </div> </div>';
                 echo $htmlCode;
               }
-              function addWeb($title, $description, $date, $name)
+              function addWeb($title, $description, $date, $name, $blogID)
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.'<br> <b> Date : </b> '. $date.'   </p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-web"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 450px;"> <div class="icon"><i class="bx bx-laptop"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> ' . $name . '<br> <b> Date : </b> ' . $date . '   </p>
+                <div style="position: fixed; bottom: 30px;"> <button class="btn-complate" id="' . $blogID . '" onclick="removeBlog(this)">Delete the Blog</button> </div>
+                </div> </div>';
                 echo $htmlCode;
               }
-              function addMobile($title, $description,$date, $name )
+              function addMobile($title, $description, $date, $name, $blogID)
               {
-                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 400px;"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> '.$name.' <br> <b> Date : </b> '. $date.'   </p></div></div>';
+                $htmlCode = '<div class="col-lg-3 col-md-6 portfolio-item filter-Mobile"> <div class="icon-box" data-aos="fade-up" data-aos-delay="100" style="height: 450px;"> <div class="icon"><i class="bx bx-mobile-alt"></i></div> <h4 class="title"><a href="">' . $title . '</a></h4> <p class="description">' . $description . '</p><p class="date" style="padding-top:15px;"> <b> By : </b> ' . $name . ' <br> <b> Date : </b> ' . $date . '   </p>
+                 <div style="position: fixed; bottom: 30px;"> <button class="btn-complate" id="' . $blogID . '" onclick="removeBlog(this)">Delete the Blog</button> </div>
+                </div> </div>';
                 echo $htmlCode;
               }
               ?>
-
-
-
-
-
-
-
-
-
-
 
             </div>
           </div>
@@ -214,7 +229,58 @@ $_SESSION['developerID'] = 1;
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+    function removeBlog(event) {
+      var blogID = event.id;
+      console.log("blogID ", blogID);
+      const sendBlogID = new FormData();
+      sendBlogID.set('blogID', blogID);
 
+      fetch('./removeBlog.php', {
+          method: 'POST',
+          redirect: 'follow',
+          body: sendBlogID
+        })
+        .then(async function(response) {
+          let res = await response.json();
+          let message = await res["result"];
+          if (message == "Success") {
+            await successAlert("Blog Removed Successfully");
+            location.reload();
+          } else {
+            await errorAlert("ERROR: Could not remove the blog");
+            location.reload();
+          }
+        })
+        .catch(async function(error) {
+          await errorAlert(error);
+          location.reload();
+        });
+    }
+
+    // error alert
+    async function errorAlert(msg) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong!',
+        text: msg,
+        showConfirmButton: true,
+        confirmButtonColor: '#dc3545',
+        timer: 10000
+      });
+    }
+
+    // success alert
+    async function successAlert(msg) {
+      return Swal.fire({
+        icon: 'success',
+        title: msg,
+        showConfirmButton: false,
+        timer: 2500
+      });
+
+    }
+  </script>
 </body>
 
 </html>
